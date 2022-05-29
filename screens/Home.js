@@ -5,10 +5,11 @@ import NavOptions from '../components/NavOptions'
 import uber from '../assets/Uber.png'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import { GOOGLE_MAPS_APIKEY } from '@env'
+import { useDispatch } from 'react-redux'
+import { setOrigin } from '../utils/helpers/StoreHelpers'
 
 const Home = () => {
-
-  const apiKey = 'AIzaSyAwGRGfcv15 - U0arYyUfmacb5PSsnFvrqo'
+  const dispatch = useDispatch()
 
   return (
     <SafeAreaView style={[tw`pt-5`, styles.container]}>
@@ -17,21 +18,25 @@ const Home = () => {
       </View>
       <View style={tw`p-5 pt-0`}>
 
-        <GooglePlacesAutocomplete placeholder='Where From?' debounce={400} query={{ key: apiKey, language: 'en' }}
+        <GooglePlacesAutocomplete
+          placeholder='Where From?'
+          debounce={400}
+          query={{ key: GOOGLE_MAPS_APIKEY, language: 'en' }}
           styles={{
-            container: { flex: 0, },
+            container: { flex: 0 },
             textInput: { fontSize: 18, }
           }}
           minLength={2}
-          returnKeyType={'search'}
+          returnKeyType='search'
           fetchDetails={true}
           enablePoweredByContainer={false}
-          nearbyPlacesAPI={'GooglePlacesSearch'}
+          nearbyPlacesAPI='GooglePlacesSearch'
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
             console.log(data, details);
-          }}
+            dispatch(setOrigin(details.geometry.location))
 
+          }}
         />
         <NavOptions />
       </View>
